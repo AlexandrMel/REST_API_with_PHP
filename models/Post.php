@@ -16,7 +16,7 @@ public $created_at;
 
 //Contructor with DB
 public function __construct($db){
-    this->conn = $db;
+    $this->conn = $db;
 }
 
 //Get Posts
@@ -35,8 +35,8 @@ public function read(){
     categories c ON p.category_id = c.id
     ORDER BY
     p.created_at DESC';
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt;
 }
-$stmt = $this->conn->prepare($query);
-$stmt->execute();
-return $stmt;
 }
