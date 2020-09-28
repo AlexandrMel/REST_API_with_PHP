@@ -1,29 +1,36 @@
 <?php
+  // Insert Headers
+  header('Access-Control-Allow-Origin: *');
+  header('Content-Type: application/json');
+  header('Access-Control-Allow-Methods: DELETE');
+  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: DELETE');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
+  //Import Classes
+  include_once '../../config/Database.php';
+  include_once '../../models/Category.php';
 
-//Import Classes
-include_once'../../config/Database.php';
-include_once'../../models/Post.php';
+  // Instantiate DB & connect
+  $database = new Database();
+  $db = $database->connect();
 
-//Instantiate DB and connect
-$database = new Database();
-$db = $database->connect();
-
-//Instantiate blog post object
-$post = new Post($db);
+  // Instantiate Category object
+  $category = new Category($db);
 
 //Get ID
-$post->id = isset($_GET['id']) ? $_GET['id'] : die();
+$data->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-//Delete the Post
-if($post->delete()){
-    echo json_encode(array(
-        'message'=> "Post Deleted"
-    ));
-} else {
-    echo json_encode(array("message"=> 'Post Not Deleted'));
-}
+  // Set ID to UPDATE
+  $category->id = $data->id;
+
+  // Delete Category
+  if($category->delete()) {
+    echo json_encode(
+        //Success response message
+      array('message' => 'Category deleted')
+    );
+  } else {
+    echo json_encode(
+        //Fail response message
+      array('message' => 'Category not deleted')
+    );
+  }

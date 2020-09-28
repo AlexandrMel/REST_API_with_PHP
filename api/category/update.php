@@ -1,37 +1,36 @@
 <?php
-
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: PUT');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
-
+  // Insert Headers
+  header('Access-Control-Allow-Origin: *');
+  header('Content-Type: application/json');
+  header('Access-Control-Allow-Methods: PUT');
+  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization,X-Requested-With');
 //Import Classes
-include_once'../../config/Database.php';
-include_once'../../models/Post.php';
+  include_once '../../config/Database.php';
+  include_once '../../models/Category.php';
+  // Instantiate DB & connect
+  $database = new Database();
+  $db = $database->connect();
 
-//Instantiate DB and connect
-$database = new Database();
-$db = $database->connect();
+  // Instantiate Category object
+  $category = new Category($db);
 
-//Instantiate blog post object
-$post = new Post($db);
+  // Get raw data from request
+  $data = json_decode(file_get_contents("php://input"));
 
-//Get raw posted data
-$data = json_decode(file_get_contents("php://input"));
+  // Set ID to UPDATE
+  $category->id = $data->id;
 
-//Set ID
-$post->id = $data->id;
-//Copy data to post Class object
-$post->title = $data->title;
-$post->body = $data->body;
-$post->author= $data->author;
-$post->category_id = $data->category_id;
+  $category->name = $data->name;
 
-//Create the Post
-if($post->update()){
-    echo json_encode(array(
-        'message'=> "Post Updated"
-    ));
-} else {
-    echo json_encode(array("message"=> 'Post Not Updated'));
-}
+  // Update category
+  if($category->update()) {
+    echo json_encode(
+        //Success message
+      array('message' => 'Category Updated')
+    );
+  } else {
+    echo json_encode(
+        //Fail message
+      array('message' => 'Category not updated')
+    );
+  }

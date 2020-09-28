@@ -1,34 +1,31 @@
 <?php
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+  // Insert Headers
+  header('Access-Control-Allow-Origin: *');
+  header('Content-Type: application/json');
 
-//Import Classes
-include_once'../../config/Database.php';
-include_once'../../models/Post.php';
+  //import Classes
+  include_once '../../config/Database.php';
+  include_once '../../models/Category.php';
 
-//Instantiate DB and connect
-$database = new Database();
-$db = $database->connect();
+  // Instantiate DB & connect
+  $database = new Database();
+  $db = $database->connect();
 
-//Instantiate blog post object
+  // Instantiate category object
+  $category = new Category($db);
 
-$post = new Post($db);
+  // Get ID
+  $category->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-//Get ID
-$post->id = isset($_GET['id']) ? $_GET['id'] : die();
+  // Get category
+  $category->read_single();
 
-//Get post 
-$post->read_single();
+  // Create array
+  $category_arr = array(
+    'id' => $category->id,
+    'name' => $category->name
+  );
 
-//Create array
-$post_arr = array(
-'id' =>$post->id,
-'title' =>$post->title,
-'body' =>$post->body,
-'author' =>$post->author,
-'category_id' =>$post->category_id,
-'category_name' =>$post->category_name
-);
-
-print_r(json_encode($post_arr));
+  // Make JSON
+  print_r(json_encode($category_arr));

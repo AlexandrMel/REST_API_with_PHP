@@ -1,5 +1,5 @@
 <?php
-
+//Inser Header
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
@@ -11,7 +11,7 @@ include_once'../../models/Category.php';
 $database = new Database();
 $db = $database->connect();
 
-//Instantiate blog post object
+//Instantiate Category object
 
 $category = new Category($db);
 
@@ -21,10 +21,10 @@ $result = $category->read();
 //Get row count
 $num = $result->rowCount();
 
-//Check if there are any posts in DB
+//Check if there are any categories in DB
 
 if($num > 0){
-    //Set Post Array
+    //Set Category Array
     $categories_arr = array();
     $categories_arr['data'] = array();
 
@@ -36,7 +36,7 @@ if($num > 0){
             'name'=>$name,
             'created_at'=> $created_at
         );
-        //Push the post item into posts_arr->data
+        //Push the post item into categories_arr->data
         array_push($categories_arr['data'], $category_item);
     }
 //turn php array to JSON
